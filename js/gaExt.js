@@ -63,6 +63,7 @@ gaExt = {
 		this.trackedMods.push(mod);
 		mod.setAttribute('data-ga-mod', gaMods);
 		mod.addEventListener('click', this.modClick, false);
+		this.doModuleViewBeacon(mod);
 	},
 	removeModule: function(mod) {
 		if (!this.conf.ready || typeof mod.nodeType == 'undefined' || mod.nodeType != 1 || this.trackedMods.indexOf(mod) == -1) return;
