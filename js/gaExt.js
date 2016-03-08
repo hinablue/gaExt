@@ -82,14 +82,14 @@ gaExt = {
 		return target;
 	},
 	fetchMods: function(e) {
-		var target, final;
+		var target, mod;
 		target = e;
 		while(target != null) {
 			if (target.tagName && (target.tagName.toLowerCase() == 'body' || target.getAttribute('data-ga-mod'))) break;
 			target = target.parentNode;
 		}//end if
-		if (target && target.tagName.toLowerCase() != 'body' && target.getAttribute('data-ga-mod')) final = target;
-		return final;
+		if (target && target.tagName.toLowerCase() != 'body' && target.getAttribute('data-ga-mod')) mod = target;
+		return mod;
 	},
 	fetchClickAble: function(e) {
 		var target;
