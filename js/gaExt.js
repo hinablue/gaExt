@@ -71,10 +71,6 @@ gaExt = {
 		mod.removeAttribute('data-ga-mod');
 		mod.removeEventListener('click', this.modClick, false);
 	},
-	refreshModule: function(mod) {
-		if (!this.conf.ready || typeof mod.nodeType == 'undefined' || mod.nodeType != 1 || this.trackedMods.indexOf(mod) == -1) return;
-		this.doModuleViewBeacon(mod);
-	},
 	getTarget: function(e) {
 		var target;
 		e = e._event || e;
@@ -139,7 +135,7 @@ gaExt = {
 	},
 	doModuleViewBeacon: function(mod) {
 		var data;
-		if (!gaExt.conf.ready || gaExt.trackedMods.indexOf(mod) == -1) return;
+		if (!gaExt.conf.ready || typeof mod.nodeType == 'undefined' || mod.nodeType != 1 || gaExt.trackedMods.indexOf(mod) == -1) return;
 
 		data = {
 			category: gaExt.data.customDefinitions.document_group || mod.getAttribute('data-ga-mod'),
