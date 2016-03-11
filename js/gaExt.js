@@ -144,14 +144,14 @@ gaExt = {
 		};
 		gaExt.doEventBeacon(mod, data);
 	},
-	snedModuleView: function() {
+	sendModuleView: function() {
 		if (!gaExt.conf.ready || !gaExt.trackedMods.length) return;
 		for (var i=-1,l=gaExt.trackedMods.length;++i<l;) gaExt.doModuleViewBeacon(gaExt.trackedMods[i]);
 	},
 	doPageViewBeacon: function(sendModuleView) {
 		if (!gaExt.conf.ready) return;
 		ga(this.data.prefix+'send', 'pageview');
-		if (sendModuleView) ga(this.snedModuleView);
+		if (sendModuleView) ga(this.sendModuleView);
 	},
 	parseData: function() {
 		var e, clear;
