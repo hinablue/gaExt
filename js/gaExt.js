@@ -112,7 +112,7 @@ gaExt = {
 		if (!gaExt.conf.ready || !target) return;
 
 		e = {
-			category: 'category',
+			category: gaExt.data.customDefinitions.document_group || 'category',
 			action: 'action',
 			label: 'none'
 		};
