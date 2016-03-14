@@ -82,10 +82,10 @@ gaExt = {
 		var target, mod;
 		target = e;
 		while(target != null) {
-			if (target.tagName && (target.tagName.toLowerCase() == 'body' || target.getAttribute('data-ga-mod'))) break;
+			if (target.tagName && (target.tagName.toLowerCase() == 'body' || target.hasAttribute('data-ga-mod'))) break;
 			target = target.parentNode;
 		}//end if
-		if (target && target.tagName.toLowerCase() != 'body' && target.getAttribute('data-ga-mod')) mod = target;
+		if (target && target.tagName.toLowerCase() != 'body' && target.hasAttribute('data-ga-mod')) mod = target;
 		return mod;
 	},
 	fetchClickAble: function(e) {
@@ -161,7 +161,7 @@ gaExt = {
 			e = document.getElementById('gaConf');
 			
 			//conf
-			if (!e || !e.getAttribute('data-conf')) clear = false;
+			if (!e || !e.hasAttribute('data-conf')) clear = false;
 			else {
 				try {
 					data = JSON.parse(e.getAttribute('data-conf'));
