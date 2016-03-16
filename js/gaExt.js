@@ -17,7 +17,6 @@ gaExt = {
 			'image',
 			'file'
 		],
-		isPageViewSend: false,
 		ready: undefined
 	},
 	data: {
@@ -59,12 +58,13 @@ gaExt = {
 		bidType: 'dimension30'
 	},
 	trackedMods: [],
-	addModule: function(mod, gaMods) {
+	addModule: function(mod, gaMods, sendBeacon) {
+		var sendBeacon = (typeof sendBeacon == 'boolean') ? sendBeacon : true;
 		if (!this.conf.ready || typeof mod.nodeType == 'undefined' || mod.nodeType != 1 || this.trackedMods.indexOf(mod) != -1) return;
 		this.trackedMods.push(mod);
 		mod.setAttribute('data-ga-mod', gaMods);
 		mod.addEventListener('click', this.modClick, false);
-		if (this.conf.isPageViewSend) this.doModuleViewBeacon(mod);
+		if (sendBeacon) this.doModuleViewBeacon(mod);
 	},
 	removeModule: function(mod) {
 		if (!this.conf.ready || typeof mod.nodeType == 'undefined' || mod.nodeType != 1 || this.trackedMods.indexOf(mod) == -1) return;
@@ -152,7 +152,6 @@ gaExt = {
 	doPageViewBeacon: function(sendModuleView) {
 		if (!gaExt.conf.ready) return;
 		ga(this.data.prefix+'send', 'pageview');
-		this.conf.isPageViewSend = true;
 		if (sendModuleView) ga(this.sendModuleView);
 	},
 	parseData: function() {
@@ -213,7 +212,7 @@ gaExt = {
 			// Array.prototype.slice.call(document.querySelectorAll(i)).forEach(
 			[].slice.call(document.querySelectorAll(i)).forEach(
 				function(node) {
-					m.addModule(node, gaMods);
+					m.addModule(node, gaMods, false);
 				}
 			);
 		}//end for
