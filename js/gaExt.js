@@ -17,6 +17,7 @@ gaExt = {
 			'image',
 			'file'
 		],
+		tracker: undefined,
 		ready: undefined
 	},
 	data: {
@@ -152,7 +153,20 @@ gaExt = {
 	doPageViewBeacon: function(sendModuleView) {
 		if (!gaExt.conf.ready) return;
 		ga(this.data.prefix+'send', 'pageview');
+		if (!this.conf.tracker) ga(this.updateStatus);
 		if (sendModuleView) ga(this.sendModuleView);
+	},
+	get: function(key) {
+		var tracker, value;
+		if (this.conf.ready && this.conf.tracker) {
+			tracker = this.conf.tracker;
+			value = tracker.get(key) || tracker.get(this.cdMap[key]);
+		}//end if
+		return value;
+	},
+	updateStatus: function() {
+		if (!gaExt.conf.ready) return;
+		gaExt.conf.tracker = ga.getByName(gaExt.data.trackerName);
 	},
 	parseData: function() {
 		var e, clear;
@@ -209,7 +223,6 @@ gaExt = {
 		m = this;
 		for (var i in this.data.trackedMods) {
 			var gaMods = this.data.trackedMods[i];
-			// Array.prototype.slice.call(document.querySelectorAll(i)).forEach(
 			[].slice.call(document.querySelectorAll(i)).forEach(
 				function(node) {
 					m.addModule(node, gaMods, false);
