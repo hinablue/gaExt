@@ -160,6 +160,7 @@ gaExt = {
 		var tracker, value;
 		if (this.conf.ready && this.conf.tracker) {
 			tracker = this.conf.tracker;
+			key = key.trim();
 			value = tracker.get(key) || tracker.get(this.cdMap[key]);
 		}//end if
 		return value;
@@ -223,6 +224,7 @@ gaExt = {
 		m = this;
 		for (var i in this.data.trackedMods) {
 			var gaMods = this.data.trackedMods[i];
+			// Array.prototype.slice.call(document.querySelectorAll(i)).forEach(
 			[].slice.call(document.querySelectorAll(i)).forEach(
 				function(node) {
 					m.addModule(node, gaMods, false);
