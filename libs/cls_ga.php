@@ -42,7 +42,8 @@ class GA {
 		//basic
 		$conf = array(
 			'trackingID' => $this->conf['trackingID'],
-			'sampleRate' => (isset($data['sampleRate'])) ? $data['sampleRate'] : '100'
+			'sampleRate' => (isset($data['sampleRate'])) ? $data['sampleRate'] : '100',
+			'signEsc' => (isset($data['signEsc'])) ? $data['signEsc'] : 'ga-esc'
 		);
 
 		//customDefinitions
@@ -68,6 +69,7 @@ class GA {
 }
 
 // $data = array(
+//	'signEsc' => 'ga-esc',
 // 	'sampleRate' => '100',
 // 	'customDefinitions' => array(
 // 		'document_group' => 'itempage',

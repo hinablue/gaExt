@@ -4,6 +4,7 @@ require_once './libs/cls_ga.php';
 $data = array(
 	'trackingID' => 'UA-74300583-1',
 	'plugins' => array('displayfeatures', 'ecommerce'),
+	'signEsc' => 'ga-esc',
 	'sampleRate' => '100',
 	'customDefinitions' => array(
 		'document_group' => 'itempage',

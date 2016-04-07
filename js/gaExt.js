@@ -23,6 +23,7 @@ gaExt = {
 	data: {
 		sampleRate: 100,
 		plugins: ['displayfeatures'],
+		signEsc: 'ga-esc',
 		customDefinitions: {},
 		trackedMods: {}
 	},
@@ -106,7 +107,7 @@ gaExt = {
 	},
 	modClick: function(e) {
 		var target = gaExt.fetchClickAble(e);
-		if (!target) return;
+		if (!target || target.classList.contains(gaExt.data.signEsc)) return;
 		gaExt.doEventBeacon(target);
 	},
 	doEventBeacon: function(target, data) {

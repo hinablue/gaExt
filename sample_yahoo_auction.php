@@ -3,7 +3,7 @@ require_once './libs/cls_ga.php';
 
 $data = array(
     'customDefinitions' => array(
-        'document_group' => 'Frontpage',
+        'document_group' => 'frontpage',
         'vtestid' => 'none',
         'spaceid' => '2092039927'
     ),
