@@ -130,6 +130,7 @@ gaExt = {
 			if (e.label == 'none' && (target.textContent || target.value)) {
 				e.label = target.value || target.textContent;
 				e.label = e.label.replace(/^\s*|(\r\n|\n|\r)|\s*$/gm, '');
+				if (!e.label.length) e.label = 'none';
 			}//end if
 		}//end if
 		if (data) for (var i in data) e[i] = data[i];
