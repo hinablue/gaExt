@@ -17,6 +17,7 @@ gaExt = {
 			'image',
 			'file'
 		],
+		localStorage: undefined,
 		tracker: undefined,
 		ready: undefined
 	},
@@ -24,6 +25,7 @@ gaExt = {
 		sampleRate: 100,
 		plugins: ['displayfeatures'],
 		signEsc: 'ga-esc',
+		markId: 'gaExtMark',
 		customDefinitions: {},
 		trackedMods: {}
 	},
@@ -167,9 +169,46 @@ gaExt = {
 		}//end if
 		return value;
 	},
-	updateStatus: function() {
-		if (!gaExt.conf.ready) return;
+	updateStatus: function(tracker) {
+		var markData, key;
+		if (!gaExt.conf.ready || gaExt.conf.tracker) return;
 		gaExt.conf.tracker = ga.getByName(gaExt.data.trackerName);
+
+		//setMark
+		gaExt.setMark();
+	},
+	hasCookie: function(sKey) {
+		if (!sKey) return false;
+		return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
+	},
+	getCookie: function(sKey) {
+		if (!sKey) return null;
+		return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+	},
+	setCookie: function(sKey, sValue, vEnd, sPath, sDomain, bSecure) {
+		if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) return false;
+		var sExpires = '';
+		if (vEnd) {
+			switch (vEnd.constructor) {
+				case Number:
+					sExpires = vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : '; max-age=' + vEnd;
+					break;
+				case String:
+					sExpires = '; expires=' + vEnd;
+					break;
+				case Date:
+					sExpires = '; expires=' + vEnd.toUTCString();
+					break;
+			}//end switch
+		}//end if
+		document.cookie = encodeURIComponent(sKey) + '=' + encodeURIComponent(sValue) + sExpires + (sDomain ? '; domain=' + sDomain : '') + (sPath ? '; path=' + sPath : '') + (bSecure ? '; secure' : '');
+		return true;
+	},
+	isEmptyObject: function(obj) {
+	    for (var prop in obj) {
+	        if (obj.hasOwnProperty(prop)) return false;
+	    }//end for
+	    return true && JSON.stringify(obj) === JSON.stringify({});
 	},
 	parseData: function() {
 		var e, clear;
@@ -201,6 +240,32 @@ gaExt = {
 
 		return this.conf.ready;
 	},
+	setMark: function() {
+		var data;
+		if (!this.conf.ready || !this.conf.localStorage) return;
+
+		data = {
+			'name': this.get('cookieName'),
+			'domain': this.get('cookieDomain'),
+			'expires': this.get('cookieExpires')
+		};
+		data.value = this.getCookie(data.name);
+		if (data.domain == 'none') data.domain = location.hostname;
+		this.conf.localStorage.setItem(this.data.markId, JSON.stringify(data));
+	},
+	recoverMark: function() {
+		var source, data;
+		if (!this.conf.ready || !this.conf.localStorage) return;
+
+		source = this.conf.localStorage.getItem(this.data.markId);
+		if (source == null) return;
+
+		data = {};
+		try { data = JSON.parse(source); } catch (err) { data = {}; }
+
+		if (isEmptyObject(data) || !data.name || this.getCookie(data.name)) return;
+		this.setCookie(data.name, data.value, Number(data.expires), '/', data.domain);
+	},
 	register: function() {
 		var m;
 		if (!this.conf.ready || typeof this.data.trackerName != 'undefined') return;
@@ -211,6 +276,9 @@ gaExt = {
 		//ga
 		window.ga = window.ga || function(){(ga.q=ga.q||[]).push(arguments)};
 		ga.l =+ new Date;
+
+		//recover mark
+		this.recoverMark();
 
 		//basic setting
 		ga('create', this.data.trackingID, 'auto', this.data.trackerName, {sampleRate: this.data.sampleRate});
@@ -249,6 +317,16 @@ gaExt = {
 		
 		//get conf
 		if (!this.parseData()) return;
+
+		//localStorage
+		if (typeof localStorage != 'undefined') {
+			s = true;
+			try {
+				localStorage.setItem('isapisupport', 'dummy');
+				localStorage.removeItem('isapisupport');
+			} catch(err) { s = false; }
+			if (s) this.conf.localStorage = localStorage;
+		}//end if
 
 		//GA register
 		this.register();
