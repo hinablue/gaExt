@@ -263,7 +263,7 @@ gaExt = {
 		data = {};
 		try { data = JSON.parse(source); } catch (err) { data = {}; }
 
-		if (isEmptyObject(data) || !data.name || this.getCookie(data.name)) return;
+		if (this.isEmptyObject(data) || !data.name || this.getCookie(data.name)) return;
 		this.setCookie(data.name, data.value, Number(data.expires), '/', data.domain);
 	},
 	register: function() {
