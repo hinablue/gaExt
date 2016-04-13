@@ -170,10 +170,8 @@ gaExt = {
 		return value;
 	},
 	updateStatus: function(tracker) {
-		var markData, key;
 		if (!gaExt.conf.ready || gaExt.conf.tracker) return;
 		gaExt.conf.tracker = ga.getByName(gaExt.data.trackerName);
-
 		//setMark
 		gaExt.setMark();
 	},
