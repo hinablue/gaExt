@@ -228,6 +228,12 @@ gaExt = {
 				//data plug
 				for (var i in data) this.data[i] = data[i];
 
+				//cdMap
+				if (typeof this.data.cdMap) {
+					this.cdMap = this.data.cdMap;
+					delete(this.data.cdMap);
+				}//end if
+
 				//plugins
 				if (typeof this.data.plugins == 'undefined' || !Array.isArray(this.data.plugins)) this.data.plugins = ['displayfeatures'];
 				if (this.data.ecommerce && this.data.plugins.indexOf('ecommerce') == -1)  this.data.plugins.push('ecommerce');
