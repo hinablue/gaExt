@@ -43,6 +43,7 @@ class GA {
 		$conf = array(
 			'trackingID' => $this->conf['trackingID'],
 			'sampleRate' => (isset($data['sampleRate'])) ? $data['sampleRate'] : '100',
+			'markId' => (isset($data['markId'])) ? $data['markId'] : 'gaExtMark',
 			'signEsc' => (isset($data['signEsc'])) ? $data['signEsc'] : 'ga-esc'
 		);
 
@@ -70,6 +71,7 @@ class GA {
 
 // $data = array(
 //	'signEsc' => 'ga-esc',
+//	'markId' => 'gaExtMark',
 // 	'sampleRate' => '100',
 // 	'customDefinitions' => array(
 // 		'document_group' => 'itempage',
@@ -122,7 +124,8 @@ class GA {
 // 		'bidType' => 'dimension30'
 // 	),
 // 	'trackedMods' => array(
-// 		'mei' => 'seller-infos'
+//		'.mei' => 'trackedMod01',
+//		'#mei' => 'trackedMod02'
 // 	),
 // 	'ecommerce' => array(
 // 		'transaction' => array(
