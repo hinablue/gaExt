@@ -229,7 +229,7 @@ gaExt = {
 				for (var i in data) this.data[i] = data[i];
 
 				//cdMap
-				if (typeof this.data.cdMap) {
+				if (typeof this.data.cdMap != 'undefined') {
 					this.cdMap = this.data.cdMap;
 					delete(this.data.cdMap);
 				}//end if
