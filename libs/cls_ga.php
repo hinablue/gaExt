@@ -42,6 +42,7 @@ class GA {
 		//basic
 		$conf = array(
 			'trackingID' => $this->conf['trackingID'],
+			'cookieDomain' => (isset($data['cookieDomain'])) ? $data['cookieDomain'] : 'none',
 			'sampleRate' => (isset($data['sampleRate'])) ? $data['sampleRate'] : '100',
 			'markId' => (isset($data['markId'])) ? $data['markId'] : 'gaExtMark',
 			'signEsc' => (isset($data['signEsc'])) ? $data['signEsc'] : 'ga-esc'
