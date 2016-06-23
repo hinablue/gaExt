@@ -22,6 +22,7 @@ gaExt = {
 		ready: undefined
 	},
 	data: {
+		cookieDomain: 'none',
 		sampleRate: 100,
 		plugins: ['displayfeatures'],
 		signEsc: 'ga-esc',
@@ -59,7 +60,9 @@ gaExt = {
 		coServerName: 'dimension26',
 		coServerName2: 'dimension27',
 		actCode: 'dimension28',
-		bidType: 'dimension30'
+		seoTopic: 'dimension29',
+		bidType: 'dimension30',
+		itemStatus: 'dimension31'
 	},
 	trackedMods: [],
 	addModule: function(mod, gaMods, sendBeacon) {
@@ -285,7 +288,8 @@ gaExt = {
 		this.recoverMark();
 
 		//basic setting
-		ga('create', this.data.trackingID, 'auto', this.data.trackerName, {sampleRate: this.data.sampleRate});
+		// ga('create', this.data.trackingID, 'auto', this.data.trackerName, {sampleRate: this.data.sampleRate});
+		ga('create', this.data.trackingID, {name:this.data.trackerName, sampleRate: this.data.sampleRate, cookieDomain:this.data.cookieDomain});
 		for (var i=-1,l=this.data.plugins.length;++i<l;) ga(this.data.prefix+'require', this.data.plugins[i]);
 
 		ga(this.data.prefix+'set', 'transport', 'beacon');
