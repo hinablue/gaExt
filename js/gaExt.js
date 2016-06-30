@@ -172,6 +172,15 @@ gaExt = {
 		}//end if
 		return value;
 	},
+	set: function(key, value) {
+		var tracker, value;
+		if (this.conf.ready && this.conf.tracker && this.cdMap[key]) {
+			tracker = this.conf.tracker;
+			key = key.trim();
+			value = value || 'none';
+			ga(this.data.prefix+'set', this.cdMap[key], value.trim());
+		}//end if
+	},
 	updateStatus: function(tracker) {
 		if (!gaExt.conf.ready || gaExt.conf.tracker) return;
 		gaExt.conf.tracker = ga.getByName(gaExt.data.trackerName);
