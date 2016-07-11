@@ -221,7 +221,7 @@ gaExt = {
 	    return true && JSON.stringify(obj) === JSON.stringify({});
 	},
 	parseData: function() {
-		var e, clear;
+		var e, clear, data;
 
 		if (typeof this.conf.ready == 'undefined') {
 			clear = true;
