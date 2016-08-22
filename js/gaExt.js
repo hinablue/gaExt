@@ -2,6 +2,7 @@ var gaExt = gaExt || {};
 
 gaExt = {
 	conf: {
+		selector: '#gaConf',
 		scriptPath: '//www.google-analytics.com/analytics.js',
 		legalTag: [
 			'a',
@@ -137,6 +138,7 @@ gaExt = {
 				e.label = e.label.toString().replace(/^\s*|(\r\n|\n|\r)|\s*$/gm, '');
 				if (!e.label.length) e.label = 'none';
 			}//end if
+			e.label = e.label.toString();
 		}//end if
 		if (data) for (var i in data) e[i] = data[i];
 
@@ -223,12 +225,15 @@ gaExt = {
 	parseData: function() {
 		var e, clear, data;
 
+		//data source
+		e = document.querySelector(gaExt.conf.selector);
+		if (!e) return false;
+
 		if (typeof this.conf.ready == 'undefined') {
 			clear = true;
-			e = document.getElementById('gaConf');
 			
 			//conf
-			if (!e || !e.hasAttribute('data-conf')) clear = false;
+			if (!e.hasAttribute('data-conf')) clear = false;
 			else {
 				try {
 					data = JSON.parse(e.getAttribute('data-conf'));
@@ -297,21 +302,19 @@ gaExt = {
 		this.recoverMark();
 
 		//basic setting
-		// ga('create', this.data.trackingID, 'auto', this.data.trackerName, {sampleRate: this.data.sampleRate});
 		ga('create', this.data.trackingID, {name:this.data.trackerName, sampleRate: this.data.sampleRate, cookieDomain:this.data.cookieDomain});
 		for (var i=-1,l=this.data.plugins.length;++i<l;) ga(this.data.prefix+'require', this.data.plugins[i]);
 
 		ga(this.data.prefix+'set', 'transport', 'beacon');
 		for (var i in this.data.customDefinitions) {
 			if (!this.cdMap[i]) continue;
-			ga(this.data.prefix+'set', this.cdMap[i], this.data.customDefinitions[i]);
+			ga(this.data.prefix+'set', this.cdMap[i], this.data.customDefinitions[i].toString());
 		}//end for
 
 		//trackedMods
 		m = this;
 		for (var i in this.data.trackedMods) {
 			var gaMods = this.data.trackedMods[i];
-			// Array.prototype.slice.call(document.querySelectorAll(i)).forEach(
 			[].slice.call(document.querySelectorAll(i)).forEach(
 				function(node) {
 					m.addModule(node, gaMods, false);
@@ -331,7 +334,7 @@ gaExt = {
 	},
 	init: function() {
 		var s;
-		
+
 		//get conf
 		if (!this.parseData()) return;
 
@@ -372,7 +375,7 @@ gaExt = {
 				clearInterval(navigator.gaIID);
 				return;
 			}//end if
-			if (document.body) {
+			if (document.body && document.querySelector(gaExt.conf.selector)) {
 				clearInterval(navigator.gaIID);
 				navigator.gaIID = null;
 				gaExt.init();
