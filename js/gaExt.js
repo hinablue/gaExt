@@ -1,4 +1,5 @@
-(function (global, factory) {
+/* eslint-disable */
+;(function (global, factory) {
   'use strict';
 
   if (typeof module === 'object' && typeof module.exports === 'object') {
@@ -16,6 +17,7 @@
 })(typeof window !== 'undefined' ? window : this, function (window) {
   'use strict';
 
+  var ga = window.ga || function () { (ga.q = ga.q || []).push(arguments); };
   var gaExt = gaExt || {};
 
   gaExt = {
@@ -165,29 +167,40 @@
         label: 'none'
       };
 
-      mod = gaExt.fetchMods(target);
-      if (mod) {
-        e = {
-          category: gaExt.data.customDefinitions.document_group || 'modClick',
-          action: mod.getAttribute('data-ga-mod') || 'action',
-          label: target.getAttribute('data-slk') || 'none'
-        };
-        if (e.label == 'none' && (target.textContent || target.value)) {
-          e.label = target.value || target.textContent;
-          e.label = e.label.toString().replace(/^\s*|(\r\n|\n|\r)|\s*$/gm, '');
-          if (!e.label.length) {
-            e.label = 'none';
-          }
+      if (typeof target !== 'boolean') {
+        mod = gaExt.fetchMods(target);
+        if (mod) {
+          e = {
+            category: gaExt.data.customDefinitions.document_group || 'modClick',
+            action: mod.getAttribute('data-ga-mod') || 'action',
+            label: target.getAttribute('data-slk') || 'none'
+          };
+          if (e.label == 'none' && (target.textContent || target.value)) {
+            e.label = target.value || target.textContent;
+            e.label = e.label.toString().replace(/^\s*|(\r\n|\n|\r)|\s*$/gm, '');
+            if (!e.label.length) {
+              e.label = 'none';
+            }
+          }//end if
+          e.label = e.label.toString();
         }//end if
-        e.label = e.label.toString();
-      }//end if
+      }
+
       if (data) {
         for (var i in data) {
           e[i] = data[i];
         }
       }
 
-      ga(gaExt.data.prefix + 'send', 'event', e.category, e.action, e.label);
+      ga(gaExt.data.prefix + 'send', 'event', {
+        eventCategory: e.category,
+        eventAction: e.action,
+        eventLabel: e.label,
+        eventValue: e.value || 0,
+        nonInteraction: e.nonInteraction || false,
+        page: window.location.hash.substring(1) || window.location.pathname,
+        userId: e.userId || null
+      });
     },
     doModuleViewBeacon: function (mod) {
       var data;
@@ -387,9 +400,8 @@
       this.data.prefix = this.data.trackerName + '.';
 
       //ga
-      var i;
-      var ga = window.ga || function () { var ga; (ga.q = ga.q || []).push(arguments); };
-      ga.l = + new Dat();
+      var i, l;
+      ga = window.ga || function () { (ga.q = ga.q || []).push(arguments); };
 
       //recover mark
       this.recoverMark();
@@ -450,19 +462,18 @@
         }
       }//end if
 
-      //GA register
-      this.register();
-
       //fetch ga script
       s = document.createElement('script');
       document.head.appendChild(s);
       s.onload = s.onreadystatechange = function () {
         this.parentNode.removeChild(this);
+
+        //GA register
+        gaExt.register();
+        gaExt.doPageViewBeacon(true);
       };
       s.async = true;
       s.src = this.conf.scriptPath;
-
-      this.doPageViewBeacon(true);
     }
   };
 
